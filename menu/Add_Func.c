@@ -2,12 +2,9 @@
 
 struct Phone_Book *Add_Func (
 	struct Phone_Book *Book,
-	unsigned int *Size_Of_Book,
-	unsigned int *Num_Of_Empty,
-	unsigned int First_Empty
+	int *Size_Of_Book
 )
 {
-
 	void *Ext_Library;
 	void (*Add)(struct Phone_Book*, char *, char *, char *);
 
@@ -27,7 +24,7 @@ struct Phone_Book *Add_Func (
 		return Book;
 	}
 
-	if ((*Size_Of_Book) > 0 && (*Num_Of_Empty) == 0) {
+	if ((*Size_Of_Book)) {
 		Book = (struct Phone_Book*)realloc(Book,(++(*Size_Of_Book)) * sizeof(struct Phone_Book));
 		fputs("Type first name of member: ", stdout);
 		fgets(First_Name, STRLEN, stdin);
@@ -37,19 +34,9 @@ struct Phone_Book *Add_Func (
 		fgets(Tel, STRLEN, stdin);
 		Add(&(Book[(*Size_Of_Book) - 1]), First_Name, Last_Name, Tel);
 	}
-	else if ((*Size_Of_Book) > 0 && (*Num_Of_Empty) > 0) {
-		fputs("Type first name of member: ", stdout);
-		fgets(First_Name, STRLEN, stdin);
-		fputs("Type last name of member: ", stdout);
-		fgets(Last_Name, STRLEN, stdin);
-		fputs("Type Telephone of member: ", stdout);
-		fgets(Tel, STRLEN, stdin);
-		Add(&(Book[First_Empty]), First_Name, Last_Name, Tel);
-		--(*Num_Of_Empty);
-	}
-	else if ((*Size_Of_Book) == 0) {
+	else {
 		Book = (struct Phone_Book*)realloc(NULL, (++(*Size_Of_Book)) * (sizeof(struct Phone_Book)));
-	fputs("Type first name of member: ", stdout);
+		fputs("Type first name of member: ", stdout);
 		fgets(First_Name, STRLEN, stdin);
 		fputs("Type last name of member: ", stdout);
 		fgets(Last_Name, STRLEN, stdin);

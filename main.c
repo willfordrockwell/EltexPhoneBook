@@ -2,21 +2,30 @@
 
 int main (int argc, char **argv)
 {
-	unsigned int Size_Of_Book = 0;
-	unsigned int Num_Of_Empty = 0;
-	unsigned int First_Empty = 0;
+	int Size_Of_Book = 0;
+	int Num_Of_Empty = 0;
+	int First_Empty = 0;
 	char CommandStr[STRLEN];
 	enum Command Cmd = ADD;
 
 	void *Ext_Library;
 
-	struct Phone_Book*
-	(*Add_Func)(struct Phone_Book*, unsigned int*, unsigned int*, unsigned int);
+	struct Phone_Book* (*Add_Func)(struct Phone_Book*, int*);
+
+	struct Phone_Book* (*Del_Func)(struct Phone_Book*, int*);
+
 	void (*Print_Help)();
-	void (*List_Func)(struct Phone_Book*, unsigned int);
+	void (*List_Func)(struct Phone_Book*,int);
+	void (*Preparation)(char*, char*);
+
+	int (*Search_Func)(struct Phone_Book*, int, char*, char);
+
 	enum Command (*Parse_Command)(char*);
 
 	struct Phone_Book *Book = NULL;
+
+	char Search_Field;
+	char *Value = (char*) malloc(sizeof(char) * STRLEN);
 
 	Ext_Library = dlopen("./menu/libcustmenu.so", RTLD_LAZY);
 
@@ -46,6 +55,28 @@ int main (int argc, char **argv)
 		return 1;
 	}
 
+	Del_Func = dlsym(Ext_Library, "Del_Func");
+
+	if (!Del_Func) {
+		fprintf(stderr, "dlsym error: %s\n", dlerror());
+		return 1;
+	}
+
+	Search_Func = dlsym(Ext_Library, "Search_Func");
+
+	if (!Search_Func) {
+		fprintf(stderr, "dlsym error: %s\n", dlerror());
+		return 1;
+	}
+
+	Preparation = dlsym(Ext_Library, "Preparation");
+
+	if (!Preparation) {
+		fprintf(stderr, "dlsym error: %s\n", dlerror());
+		return 1;
+	}
+
+
 	Print_Help = dlsym(Ext_Library, "Print_Help");
 
 	if (!Print_Help) {
@@ -65,16 +96,21 @@ int main (int argc, char **argv)
 		switch (Cmd)
 		{
 		case ADD:
-			Book = Add_Func(Book, &Size_Of_Book, &Num_Of_Empty, First_Empty);
-			if (Num_Of_Empty > 0)
+			Book = Add_Func(Book, &Size_Of_Book);
+			if (Num_Of_Empty > 0) {
 				//update First_Empty
+			}
 			break;
 		case DEL:
+			Book = Del_Func(Book, &Size_Of_Book);
 			break;
 		case LIST:
 			List_Func(Book, Size_Of_Book);
 			break;
 		case SEARCH:
+			Preparation(&Search_Field, Value);
+			fprintf(stdout, "Position of Searching element is: %d\n",
+			Search_Func(Book, Size_Of_Book, Value, Search_Field + 1));
 			break;
 		case HELP:
 			Print_Help();
@@ -84,7 +120,7 @@ int main (int argc, char **argv)
 		}
 	} while (Cmd != QUIT);
 	dlclose(Ext_Library);
-	Book = realloc(Book, 0);
+	free(Book);
 	fputs("Quiting...\n", stdout);
 	return 0;
 }

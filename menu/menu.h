@@ -27,16 +27,27 @@ void Print_Help();
 
 struct Phone_Book *Add_Func (
 	struct Phone_Book *Book,
-	unsigned int *Size_Of_Book,
-	unsigned int *Num_Of_Empty,
-	unsigned int First_Empty
+	int *Size_Of_Book
 );
 
-void Del_Func();
+struct Phone_Book *Del_Func(
+	struct Phone_Book *Book,
+	int *Size_Of_Book
+);
 
 void List_Func(
 	struct Phone_Book *Book,
-	unsigned int Size_Of_Book
+	int Size_Of_Book
 );
 
-void Search_Func ();
+int Search_Func (
+	struct Phone_Book *Book,
+	int Size_Of_Book,
+	char *Value,
+	char Search_Field
+);
+
+void Preparation(
+	char *Search_Field,
+	char *Value
+);

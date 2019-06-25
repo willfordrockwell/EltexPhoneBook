@@ -3,7 +3,7 @@ CC = gcc
 CCFLAGS = -fPIC
 
 LIBRARY = menu
-LIBRARY_SOURCES = Parse_Command.c Print_Help.c Add_Func.c List_Func.c strlwr.c
+LIBRARY_SOURCES = Preparation.c Parse_Command.c Print_Help.c Add_Func.c Del_Func.c List_Func.c Search_Func.c strlwr.c
 LIBRARY_OBJECTS = $(LIBRARY_SOURCES:.c=.o)
 
 #Library Menu library from objects

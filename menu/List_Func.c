@@ -2,7 +2,7 @@
 
 void List_Func (
 	struct Phone_Book *Book,
-	unsigned int Size_Of_Book
+	int Size_Of_Book
 )
 {
 	fprintf(stdout, "Found %d record%s in phone book\n", 
@@ -12,7 +12,7 @@ void List_Func (
 		if (strcmp(Book->First_Name, "\0") == 0) {
 			continue;
 		}
-		fprintf(stdout, "%2d member \nFirst name: %sLast name: %sTel.: %s\n",
+		fprintf(stdout, "%2d member \nFirst name: %sLast name:  %sTel.:\t    %s\n",
 		i + 1, Book->First_Name, Book->Last_Name, Book->Tel);
 		Book++;
 	}
